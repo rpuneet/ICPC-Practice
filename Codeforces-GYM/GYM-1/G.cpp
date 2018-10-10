@@ -9,29 +9,27 @@ vector<long long>ans,quer;
 
 void dfs(long long v,long long par,long long wt,long long mxwt,long long pwt)
 {
- //  cout<<"v is "<<v<<"\n";
+   //cout<<"v is "<<v<<"\n";
+
     mp[wt]=v;
     for(auto i:vec[v]){
         if(i.first!=par){
-
-            if(i.second<=mxwt){
             long long val;
-             auto x = upper_bound(src[v].begin(),src[v].end(),i.second);
-             if(x==src[v].end())
-                val=INF;
-            else{
-                if((*x)==pwt){
-                    x++;
-                }
-            if(x==src[v].end())
-                val=INF;
+            auto x = upper_bound(src[v].begin(),src[v].end(),i.second);
+            //cout<<"x is "<<*x<<"\n";
+            if(x == src[v].end())
+            val = mxwt;
             else
-                val=*x;
-
+            {
+                if(*x==pwt)
+                    x++;
+                if(x == src[v].end())
+                    val=mxwt;
+                else
+                    val=min(mxwt,*x);
             }
-        if(wt<min(mxwt,val))
-        dfs(i.first,v,max(wt,i.second),min(mxwt,val),i.second);
-        else return ;}
+            if(wt<val && i.second<=val)
+            {/*cout<<"range "<<wt<<" "<<val<<"\n";*/dfs(i.first,v,max(wt,i.second),val,i.second);}
         }
     }
 }
@@ -68,15 +66,16 @@ int main()
     dfs(1,-1,-1,INF,-1);
     long long sum=0;
     for(auto it=mp.begin();it!=mp.end();it++)
-        ans.push_back(it->first);
+      ans.push_back(it->first);
     for(long long i=0;i<q;i++)
     {
         auto x = lower_bound(ans.begin(),ans.end(),quer[i]);
         x--;
+        //cout<<*x<<" ";
         sum+=mp[*x];
-        cout<<mp[*x]<<" ";
+       // cout<<mp[*x]<<" ";
     }
-   // cout<<sum<<"\n";
+    cout<<sum<<"\n";
    /* for(auto it=mp.begin();it!=mp.end();it++)
         cout<<(it->first.first)<<" "<<it->first.second<<" "<<it->second<<"\n";*/
     }
